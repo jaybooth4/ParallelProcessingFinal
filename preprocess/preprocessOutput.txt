@@ -1,0 +1,141 @@
+         beer_beerid                           beer_name
+0              47986                        Sausa Weizen
+1              48213                            Red Moon
+2              48215              Black Horse Black Beer
+3              47969                          Sausa Pils
+4              64883                       Cauldron DIPA
+5              52159                 Caldera Ginger Beer
+10               436                        Amstel Light
+15             10789               Caldera Oatmeal Stout
+17             12386                      Caldera OBF 15
+19             58046                       Rauch Ür Bock
+63             25414                    Caldera Pale Ale
+66             10788                   Pilot Rock Porter
+115            58920                    Vas Deferens Ale
+257            10784                         Caldera IPA
+273            21241             Cauldron Espresso Stout
+274            20818           Old Growth Imperial Stout
+293            10786                         Dry Hop Red
+313            10794                    Southside Strong
+314            54330                      Caldera Märzen
+315            20817                     Lawnmower Lager
+329            61427  Caldera Rose Petal (Kettle Series)
+350             3386                       Amstel Bright
+393            55097                           Nut Brown
+403             2780                The Captain's Porter
+430            20689                The Highland Stagger
+448             2725                       Swamp Fox IPA
+659            33624               Hoppin' To Heaven IPA
+682            56071                 Hopportunity Knocks
+710            10785                       Ashland Amber
+725            76963                      Coconut Porter
+...              ...                                 ...
+1586492        41801                  Abominal Snow Beer
+1586498        57829                               Death
+1586505        51470                             Da Oaty
+1586509        56682                  Lump Of Coal Stout
+1586510        37136                         Belgian Wit
+1586511        34404              Four Horsemen #2:  War
+1586513        45508                        Brandy Brown
+1586517        50663                          Summer Ale
+1586519        52854                   English Nut Brown
+1586520        32985                              Porter
+1586535        33672  Four Horsemen #1: Stephano's Stout
+1586537        36424                                Bock
+1586542        32914                     Inspiration Ale
+1586550        52692                          Hop Common
+1586551        40553                    Raspberry Lambic
+1586552        35185                      India Pale Ale
+1586565        49777                 Very Hoppy Pale Ale
+1586566        49776                   Prohibition Lager
+1586569        43989                Four Horsemen #4 War
+1586571        34405                  2007 Resolution #1
+1586575        36388                     O'Defiant Stout
+1586583        34215                     Big Thumper Ale
+1586587        36555                             Maibock
+1586588        62147                   Bear Mountain Ale
+1586592        41749                         Irish Amber
+1586594        38160                     Highland Porter
+1586595        71234                    Baron Von Weizen
+1586596        48360                       Resolution #2
+1586599        43233                          Double IPA
+1586600        33061                  The Horseman's Ale
+
+[66055 rows x 2 columns]
+         review_overall  review_aroma  review_appearance review_profilename  review_palate  review_taste  beer_abv  beer_beerid
+0                   1.5           2.0                2.5            stcules            1.5           1.5       5.0        47986
+1                   3.0           2.5                3.0            stcules            3.0           3.0       6.2        48213
+2                   3.0           2.5                3.0            stcules            3.0           3.0       6.5        48215
+3                   3.0           3.0                3.5            stcules            2.5           3.0       5.0        47969
+4                   4.0           4.5                4.0     johnmichaelsen            4.0           4.5       7.7        64883
+5                   3.0           3.5                3.5            oline73            3.0           3.5       4.7        52159
+6                   3.5           3.5                3.5          Reidrover            4.0           4.0       4.7        52159
+7                   3.0           2.5                3.5       alpinebryant            2.0           3.5       4.7        52159
+8                   4.0           3.0                3.5      LordAdmNelson            3.5           4.0       4.7        52159
+9                   4.5           3.5                5.0       augustgarage            4.0           4.0       4.7        52159
+10                  3.0           2.0                3.0            fodeeoz            2.5           2.5       3.5          436
+11                  5.0           5.0                4.0       MadeInOregon            4.0           4.0       4.7        52159
+12                  4.0           4.0                4.0            rawthar            3.5           4.0       4.7        52159
+13                  4.0           4.5                3.0        Halcyondays            2.5           3.0       4.7        52159
+14                  3.5           4.0                3.0        RangerClegg            3.0           4.0       4.7        52159
+15                  3.0           3.0                2.5   Beerandraiderfan            3.0           3.0       7.2        10789
+16                  2.0           1.5                2.5         RedDiamond            2.5           2.0       7.2        10789
+17                  4.0           3.0                4.0         beerguy101            4.0           4.0       5.6        12386
+18                  2.5           3.0                3.0             jdhilt            2.0           2.0       3.5          436
+19                  4.5           4.5                3.0        UCLABrewN84            4.0           4.5       7.4        58046
+20                  4.0           4.0                4.0         zaphodchak            3.0           4.0       7.4        58046
+21                  4.0           4.5                4.0            Tilley4            3.5           4.0       7.4        58046
+22                  4.5           5.0                4.5    mikedrinksbeer2            4.0           4.5       7.4        58046
+23                  4.0           4.5                4.0         dbmernin83            4.0           4.5       7.4        58046
+24                  4.5           4.5                4.0     titosupertramp            4.0           4.5       7.4        58046
+25                  5.0           5.0                3.5        optimator13            3.5           5.0       7.4        58046
+26                  4.5           4.5                4.0          Blakaeris            4.0           4.5       7.4        58046
+27                  4.5           5.0                4.0            bashiba            4.0           4.0       7.4        58046
+28                  4.5           4.5                3.5               Klym            4.0           4.5       7.4        58046
+29                  4.5           4.5                4.0          flexabull            4.0           4.0       7.4        58046
+...                 ...           ...                ...                ...            ...           ...       ...          ...
+1586584             4.5           4.0                4.0           dherling            4.0           4.0       5.8        34215
+1586585             3.5           3.5                3.5             tgbljb            3.5           3.5       5.8        34215
+1586586             3.5           3.5                3.5               cbl2            3.5           3.5       5.8        34215
+1586587             3.5           4.5                4.0                BBM            4.5           4.0       NaN        36555
+1586588             2.0           2.5                3.0           Buddha22            2.0           2.5       8.0        62147
+1586589             1.0           4.0                4.5         JohnQVegas            3.0           1.0       8.0        62147
+1586590             1.5           3.5                4.0         cpanossian            3.0           1.5       8.0        62147
+1586591             1.0           2.0                3.0           claspada            2.0           1.0       8.0        62147
+1586592             4.5           3.5                4.0         RblWthACoz            4.0           4.5       5.2        41749
+1586593             4.5           4.0                4.5          yelterdow            4.0           4.0       5.2        41749
+1586594             3.0           3.5                4.0         maddogruss            4.0           4.0       6.0        38160
+1586595             4.0           3.5                4.0       JerzDevl2000            4.0           4.0       5.0        71234
+1586596             4.0           3.0                5.0         hoppymcgee            4.0           3.5       NaN        48360
+1586597             4.5           4.5                4.0             WesWes            4.0           4.0       NaN        48360
+1586598             4.0           4.0                3.5          Slatetank            4.0           4.5       NaN        48360
+1586599             3.5           4.5                4.0          Lenny2884            4.0           4.0       9.0        43233
+1586600             3.5           4.0                3.5         ummswimmin            3.0           3.5       5.2        33061
+1586601             4.5           4.0                4.0            pzrhsau            4.5           4.0       5.2        33061
+1586602             4.0           4.0                4.0           asabreed            4.0           4.0       5.2        33061
+1586603             4.0           4.5                4.0               infi            4.0           4.0       5.2        33061
+1586604             4.0           4.5                4.5            njmoons            3.5           3.5       5.2        33061
+1586605             5.0           5.0                5.0         NyackNicky            5.0           5.0       5.2        33061
+1586606             5.0           4.5                4.0    blitheringidiot            5.0           5.0       5.2        33061
+1586607             5.0           5.0                4.5             PopeDX            5.0           4.5       5.2        33061
+1586608             3.5           4.0                4.0    treehugger02010            3.5           3.0       5.2        33061
+1586609             5.0           4.0                3.5         maddogruss            4.0           4.0       5.2        33061
+1586610             4.0           5.0                2.5          yelterdow            2.0           4.0       5.2        33061
+1586611             4.5           3.5                3.0           TongoRad            3.5           4.0       5.2        33061
+1586612             4.0           4.5                4.5           dherling            4.5           4.5       5.2        33061
+1586613             5.0           4.5                4.5               cbl2            4.5           4.5       5.2        33061
+
+[1586614 rows x 8 columns]
+Index([u'review_overall', u'review_aroma', u'review_appearance',
+       u'review_profilename', u'review_palate', u'review_taste', u'beer_abv',
+       u'beer_beerid'],
+      dtype='object')
+       review_overall  review_aroma  review_appearance  review_palate  review_taste      beer_abv   beer_beerid
+count    1.586614e+06  1.586614e+06       1.586614e+06   1.586614e+06  1.586614e+06  1.518829e+06  1.586614e+06
+mean     3.815581e+00  3.735636e+00       3.841642e+00   3.743701e+00  3.792860e+00  7.042387e+00  2.171279e+04
+std      7.206219e-01  6.976167e-01       6.160928e-01   6.822184e-01  7.319696e-01  2.322526e+00  2.181834e+04
+min      0.000000e+00  1.000000e+00       0.000000e+00   1.000000e+00  1.000000e+00  1.000000e-02  3.000000e+00
+25%      3.500000e+00  3.500000e+00       3.500000e+00   3.500000e+00  3.500000e+00  5.200000e+00  1.717000e+03
+50%      4.000000e+00  4.000000e+00       4.000000e+00   4.000000e+00  4.000000e+00  6.500000e+00  1.390600e+04
+75%      4.500000e+00  4.000000e+00       4.000000e+00   4.000000e+00  4.500000e+00  8.500000e+00  3.944100e+04
+max      5.000000e+00  5.000000e+00       5.000000e+00   5.000000e+00  5.000000e+00  5.770000e+01  7.731700e+04
