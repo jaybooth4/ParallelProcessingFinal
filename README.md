@@ -20,3 +20,8 @@ Create a dataframe with brewery/non-numerical information removed
 Mllib is deprecated and focuses on RDD machine learning tasks  
 ml deals with pipelines and Dataframes  
 Mllib is slowly being deprecated  
+
+### Links
+[docs](https://spark.apache.org/docs/2.3.2/api/python/pyspark.ml.html#pyspark.ml.recommendation.ALS)
+[example](https://spark.apache.org/docs/2.3.2/ml-collaborative-filtering.html)
+[src](https://spark.apache.org/docs/2.3.2/api/python/_modules/pyspark/ml/recommendation.html#ALS)

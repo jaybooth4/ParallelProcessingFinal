@@ -1,2 +1,3 @@
 checkpoint/*
-data/beer_reviews.csv
+data/raw/*
+data/beer/*
