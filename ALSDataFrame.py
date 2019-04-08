@@ -5,7 +5,10 @@ import sys
 import argparse
 from pyspark import SparkContext
 from operator import add
-from pyspark.mllib.recommendation import ALS, Rating
+from pyspark.ml.recommendation import ALS
+from pyspark.sql import Row
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.sql import SparkSession
 
 def parseArgs():
     """ 
@@ -29,21 +32,23 @@ def parseArgs():
 
     return parser.parse_args()
 
-def readRatings(fileName, sparkContext):
+def readRatings(fileName, sparkContext, sess):
     """ 
         Read in ratings from a given file. 
         Assumes the file is a csv in the format (user, item, rating)
     """
-    return sparkContext.textFile(fileName).map(lambda x: tuple(x.split(','))).map(lambda (user, item, rating): Rating(int(user), int(item), float(rating)))
+    ratingsRDD = sparkContext.textFile(fileName).map(lambda x: tuple(x.split(',')))\
+        .map(lambda (user, item, rating): Row(userId=int(user), itemId=int(item), rating=float(rating)))
+    return sess.createDataFrame(ratingsRDD)
 
-def readFolds(directory, numFolds, sc):
+def readFolds(directory, numFolds, sc, sess):
     """
         Reads folds of data from a directory.
         Assumes files are formatted with "fold[i]" where i is the fold number
     """
     folds = {}
     for k in range(numFolds):
-        folds[k] = readRatings(directory+"/fold"+str(k), sc)
+        folds[k] = readRatings(directory+"/fold"+str(k), sc, sess)
     return folds
 
 def createTrainTestData(folds, k, N):
@@ -59,35 +64,30 @@ def createTrainTestData(folds, k, N):
     test = folds[k].repartition(N).cache()
     return train, test
 
-def testModel(model, testFold):
-    """
-        Tests a model given a trained ALS model, and a test dataset.
-    """
-    featuresOnly = testFold.map(lambda rating: (rating[0], rating[1]))
-    predictions = model.predictAll(featuresOnly).map(lambda rating: ((rating[0], rating[1]), rating[2]))
-    ratings = testFold.map(lambda rating: ((rating[0], rating[1]), rating[2]))
-    ratingsAndPredictions = ratings.join(predictions)
-    RMSE = ratingsAndPredictions.map(lambda r: np.sqrt(np.square(r[1][0] - r[1][1]))).mean()
-    return RMSE
-
 def main():
     args = parseArgs()
     sc = SparkContext(args.master, appName='Alternating least squares')
-    
+    sess = SparkSession(sc)
+
     if not args.verbose:
         sc.setLogLevel("ERROR")
     
     sc.setCheckpointDir('checkpoint/')
 
-    folds = readFolds(args.data, args.folds, sc)
+    folds = readFolds(args.data, args.folds, sc, sess)
     cross_val_rmses = []
     for k in range(len(folds)):
         train, test = createTrainTestData(folds, k, args.N)
         print"Initiating fold %d with %d train samples and %d test samples" % (k, train.count(), train.count())
 
         start = time()
-        model = ALS.train(train, args.d, iterations=args.iter, lambda_=args.reg)
-        testRMSE = testModel(model, test)
+        als = ALS(maxIter=args.iter, regParam=args.reg, userCol="userId", itemCol="itemId", ratingCol="rating", coldStartStrategy='drop')
+        model = als.fit(train)
+        predictions = model.transform(test)
+        predictions.show()
+        evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating", predictionCol="prediction")
+        testRMSE = evaluator.evaluate(predictions)
+
         now = time()-start
         print "Fold: %d\tTime: %f\tTestRMSE: %f" % (k, now, testRMSE)
         
