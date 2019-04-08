@@ -8,6 +8,9 @@ from operator import add
 from pyspark.mllib.recommendation import ALS, MatrixFactorizationModel, Rating
 
 def parseArgs():
+    """ 
+        Arg Parsing.
+    """
     parser = argparse.ArgumentParser(
         description='Alternating least squares.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('data', help='Directory containing folds. The folds should be named fold0, fold1, ..., foldK.')
@@ -28,25 +31,39 @@ def parseArgs():
     return parser.parse_args()
 
 def readRatings(fileName, sparkContext):
+    """ 
+        Read in ratings from a given file. 
+        Assumes the file is a csv in the format (user, item, rating)
+    """
     return sparkContext.textFile(fileName).map(lambda x: tuple(x.split(','))).map(lambda (i, j, rij): Rating(int(i), int(j), float(rij)))
 
-def readFolds(directory, numFolds):
+def readFolds(directory, numFolds, sc):
+    """
+        Reads folds of data from a directory.
+        Assumes files are formatted with "fold[i]" where i is the fold number
+    """
     folds = {}
     for k in range(numFolds):
         folds[k] = readRatings(directory+"/fold"+str(k), sc)
     return folds
 
-def createTrainTestData(folds, k):
+def createTrainTestData(folds, k, N):
+    """
+        Generates test and train data with the given fold object and value for k.
+        k represents the fold to use for testing, while all other folds will be used for training.
+    """
     train_folds = [folds[j] for j in folds if j is not k]
     train = train_folds[0]
     for fold in train_folds[1:]:
         train = train.union(fold)
-    train.repartition(args.N).cache()
-    test = folds[k].repartition(args.N).cache()
+    train.repartition(N).cache()
+    test = folds[k].repartition(N).cache()
     return train, test
 
-
 def testModel(model, testFold):
+    """
+        Tests a model given a trained ALS model, and a test dataset.
+    """
     featuresOnly = testFold.map(lambda rating: (rating[0], rating[1]))
     predictions = model.predictAll(featuresOnly).map(lambda rating: ((rating[0], rating[1]), rating[2]))
     ratings = testFold.map(lambda rating: ((rating[0], rating[1]), rating[2]))
@@ -54,20 +71,19 @@ def testModel(model, testFold):
     MSE = ratingsAndPredictions.map(lambda r: (r[1][0] - r[1][1])**2).mean()
     return MSE
 
-if __name__ == "__main__":
-
+def main():
     args = parseArgs()
     sc = SparkContext(args.master, appName='Alternating least squares')
+    
     if not args.verbose:
         sc.setLogLevel("ERROR")
     
     sc.setCheckpointDir('checkpoint/')
 
-    folds = readFolds(args.data, args.folds)
-    
+    folds = readFolds(args.data, args.folds, sc)
     cross_val_mses = []
     for k in range(len(folds)):
-        train, test = createTrainTestData(folds, k)
+        train, test = createTrainTestData(folds, k, args.N)
         print"Initiating fold %d with %d train samples and %d test samples" % (k, train.count(), train.count())
 
         start = time()
@@ -81,3 +97,6 @@ if __name__ == "__main__":
         test.unpersist()
 
     print "%d-fold cross validation error is: %f " % (args.folds, np.mean(cross_val_mses))
+
+if __name__ == "__main__":
+    main()
