@@ -1,12 +1,12 @@
-2019-04-08 15:40:51 WARN  NativeCodeLoader:62 - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2019-04-08 15:48:45 WARN  NativeCodeLoader:62 - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Initiating fold 0 with 40 train samples and 40 test samples
-Fold: 0.000000	Time: 2.914017	TestMSE: 25687.850666
+Fold: 0	Time: 2.907855	TestMSE: 20537.519295
 Initiating fold 1 with 40 train samples and 40 test samples
-Fold: 1.000000	Time: 1.722040	TestMSE: 22208.414168
+Fold: 1	Time: 1.661855	TestMSE: 20943.601149
 Initiating fold 2 with 40 train samples and 40 test samples
-Fold: 2.000000	Time: 1.638778	TestMSE: 8370.092800
+Fold: 2	Time: 1.454789	TestMSE: 5630.202586
 Initiating fold 3 with 40 train samples and 40 test samples
-Fold: 3.000000	Time: 1.510164	TestMSE: 40956.052261
+Fold: 3	Time: 1.462521	TestMSE: 20352.080730
 Initiating fold 4 with 40 train samples and 40 test samples
-Fold: 4.000000	Time: 1.540235	TestMSE: 19804.376205
-5-fold cross validation error is: 23405.357220 
+Fold: 4	Time: 1.412878	TestMSE: 7138.047605
+5-fold cross validation error is: 14920.290273 

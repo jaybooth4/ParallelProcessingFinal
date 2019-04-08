@@ -5,7 +5,7 @@ import sys
 import argparse
 from pyspark import SparkContext
 from operator import add
-from pyspark.mllib.recommendation import ALS, MatrixFactorizationModel, Rating
+from pyspark.mllib.recommendation import ALS, Rating
 
 def parseArgs():
     """ 
@@ -18,9 +18,8 @@ def parseArgs():
     parser.add_argument('--reg', default=1.0, type=float, help="Regularization parameter")
     parser.add_argument('--d', default=10, type=int, help="Number of latent features")
     parser.add_argument('--outputfile', help='Output file to save the model')
-    parser.add_argument('--maxiter', default=20, type=int, help='Maximum number of iterations')
+    parser.add_argument('--iter', default=20, type=int, help='Number of iterations to use during training')
     parser.add_argument('--N', default=40, type=int, help='Parallelization Level')
-    parser.add_argument('--seed', default=1234567, type=int, help='Seed used in random number generator')
     parser.add_argument('--master',default="local[4]",help="Spark Master")
 
     verbosity_group = parser.add_mutually_exclusive_group(required=False)
@@ -87,10 +86,10 @@ def main():
         print"Initiating fold %d with %d train samples and %d test samples" % (k, train.count(), train.count())
 
         start = time()
-        model = ALS.train(train, args.d, args.maxiter, args.reg)
+        model = ALS.train(train, args.d, iterations=args.iter, lambda_=args.reg)
         testMSE = testModel(model, test)
         now = time()-start
-        print "Fold: %f\tTime: %f\tTestMSE: %f" % (k, now, testMSE)
+        print "Fold: %d\tTime: %f\tTestMSE: %f" % (k, now, testMSE)
         
         cross_val_mses.append(testMSE)
         train.unpersist()
