@@ -1,0 +1,2 @@
+Does a cache persist beyond the scope of a function?
+What was the motivation for partitioning with 40 partitions in the last assignment?
