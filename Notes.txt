@@ -1,8 +1,0 @@
-Questions
-Does a cache persist beyond the scope of a function?
-What was the motivation for partitioning with 40 partitions in the last assignment?
-Cold start strategy --> drop, how does this change RMSE value?
-    This could explain different RMSE's for df and non-df implementations
-What could we do with brewery name, beer_style, beer_name?? (non-numerical vals)
-Preprocessing, remove all beers with no abv?
-Include review overall in the closed form portion of the project?
