@@ -9,16 +9,16 @@ NUMFOLDS = 5
 
 def createBeerLookup(df, save=True):
     # Create a beer lookup table of ID to name
-    beerLookup = df.loc[:, ['beer_beerid', 'beer_style', 'beer_name']].copy()
+    beerLookup = df[['beer_beerid', 'beer_name', 'beer_style']].copy()
+    beerLookup['beer_style_id'] = beerLookup['beer_style'].astype('category').cat.codes
     beerLookup.drop_duplicates(inplace=True)
     if save:
         beerLookup.to_csv(OUTDATADIR + "beerLookup.csv", index=False)
     return beerLookup
 
-
 def createCollaborativeDataset(df, save=True):
     # (user, item, rating) format
-    collaborativeDataset = df.loc[:, ['review_profilename', 'beer_beerid', 'review_overall']].copy()
+    collaborativeDataset = df[['review_profilename', 'beer_beerid', 'review_overall']].copy()
     collaborativeDataset["review_profilename"] = collaborativeDataset["review_profilename"].astype('category').cat.codes
     collaborativeDataset = shuffle(collaborativeDataset)
 
