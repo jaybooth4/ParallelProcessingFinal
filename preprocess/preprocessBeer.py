@@ -9,11 +9,13 @@ NUMFOLDS = 5
 
 def createBeerLookup(df, save=True):
     # Create a beer lookup table of ID to name
-    beerLookup = df[['beer_beerid', 'beer_name', 'beer_style']].copy()
-    beerLookup['beer_style_id'] = beerLookup['beer_style'].astype('category').cat.codes
-    beerLookup.drop_duplicates(inplace=True)
+    beerData = df[['beer_beerid', 'beer_name', 'beer_style', 'review_overall']].copy()
+    beerData['beer_style_id'] = beerData['beer_style'].astype('category').cat.codes
+    beerNames = beerData.drop(columns=['review_overall']).drop_duplicates().set_index('beer_beerid')
+    beerAvgRating= beerData.groupby('beer_beerid')[['beer_beerid', 'review_overall']].mean().set_index('beer_beerid')
+    beerLookup = beerNames.join(beerAvgRating, how='inner')
     if save:
-        beerLookup.to_csv(OUTDATADIR + "beerLookup.csv", index=False)
+        beerLookup.to_csv(OUTDATADIR + "beerLookup.csv")
     return beerLookup
 
 def createCollaborativeDataset(df, save=True):
