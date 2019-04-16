@@ -10,15 +10,24 @@ from bokeh.plotting import figure, show
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
+from util import readMultipartCSV, getBeerIdsByStyles
+
 OUTPUT = '../output/'
-BEERVECTORS = "testMatrix.csv"
+BEERVECTORS = "../results/mf/u.csv/"
+BEERLOOKUP = "../data/beer/beerLookup.csv"
+
+# 14=APA,m 53=Euro Pale Lager
+STYLES = [14, 53]
 
 class MatrixGrapher:
     
-    def __init__(self, graphType='beer'):    
-        vectors = pd.read_csv(BEERVECTORS)
+    def __init__(self, graphType='beer'):
+
+        vectors = readMultipartCSV(BEERVECTORS)
+        idsForStyles, idToStyleMap = getBeerIdsByStyles(STYLES, BEERLOOKUP)
+        vectors = vectors.loc[vectors[0].isin(idsForStyles)]
         self.data = vectors.iloc[:, 1:].values.tolist()
-        self.ids = vectors.iloc[:, 0]
+        self.ids = list(map(lambda elem: STYLES.index(idToStyleMap[elem]), vectors.iloc[:, 0]))
         self.graphType = graphType
     
     def graphPCA(self):
