@@ -51,7 +51,7 @@ def similarBeers(beerData, beers, save=True):
     beerAvg = np.mean(specifiedBeers, axis=0)
     closestBeers = getClosestBeers(beerData, beerAvg)
     if save:
-        closestBeers.to_csv(OUTPUT + "closestBeers.csv")
+        closestBeers.to_csv(OUTPUT + "beerDistances.csv")
     return closestBeers
 
 def topBeers(beerData, styles, save=True):
@@ -60,7 +60,7 @@ def topBeers(beerData, styles, save=True):
         .sort_values(by=['review_overall'], ascending=False)
     topBeersByStyle = topBeersByStyle.join(beerData[['beer_name']].drop_duplicates())
     if save:
-        topBeersByStyle.to_csv(OUTPUT + "topBeers.csv")
+        topBeersByStyle.to_csv(OUTPUT + "topBeersByStyle.csv")
     return topBeersByStyle
 
 def similarStyles(beerData, styles, save=True):
