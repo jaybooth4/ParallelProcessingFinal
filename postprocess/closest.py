@@ -3,8 +3,9 @@ import argparse
 import sys
 from scipy.spatial.distance import euclidean
 import numpy as np
+import glob, os    
 
-BEERVECTORS = "testMatrix.csv"
+BEERVECTORS = "../results/mf/u.csv/"
 BEERLOOKUP = "../data/beer/beerLookup.csv"
 OUTPUT = "../output/"
 
@@ -22,11 +23,14 @@ def parseArgs():
 
 def getBeerVectors(beerVectorFile):
     ''' Get beer vectors from output of training run '''
-    beerVectors = pd.read_csv(beerVectorFile)
+    files = set(glob.glob(BEERVECTORS + "*")) - set(glob.glob(BEERVECTORS + "*.crc")) - set(glob.glob(BEERVECTORS + "_SUCCESS"))
+    beerVectors = pd.concat(map(lambda f: pd.read_csv(f, header=None), files))
+    # beerVectors = pd.read_csv(beerVectorFile)
     beerVectors['featureVector'] = beerVectors.iloc[:, 1:].values.tolist()
     beerVectors['beer_beerid'] = beerVectors.iloc[:, 0]
     beerVectors = beerVectors[['beer_beerid', 'featureVector']].set_index('beer_beerid')
     beerVectors['featureVector'] = beerVectors['featureVector'].apply(lambda vector: np.array(vector))
+    print beerVectors
     return beerVectors
 
 def getBeerData(lookupFile, vectorFile):
