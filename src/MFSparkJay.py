@@ -219,11 +219,11 @@ def adaptU(joinedRDD, gamma, lam, N):
 
         The return value  is an RDD with tuples of the form (i,ui). The returned rdd contains exactly N partitions.
     """
-    curGradByUser = joinedRDD.map(lambda (i, j, delta, ui, vj): (i, tuple(ui))).distinct().mapValues(lambda ui: np.array(ui)).repartition(N)
+    curRepByUser = joinedRDD.map(lambda (i, j, delta, ui, vj): (i, ui)).repartition(N)
     gradMSEByUser = joinedRDD.map(lambda (i, j, delta, ui, vj): (i, gradient_u(delta, ui, vj))).reduceByKey(add).repartition(N)
-    gradRegularizationByUser = curGradByUser.map(lambda (i, ui): (i, 2 * lam * ui)).repartition(N)
+    gradRegularizationByUser = curRepByUser.map(lambda (i, ui): (i, 2 * lam * ui)).repartition(N)
     gradTotalByUser = gradMSEByUser.join(gradRegularizationByUser).mapValues(lambda (gradMSE, gradReg): gamma * (gradMSE + gradReg)).repartition(N)
-    return curGradByUser.join(gradTotalByUser).mapValues(lambda (cur, gradTotal): cur - gradTotal).repartition(N)
+    return curRepByUser.join(gradTotalByUser).mapValues(lambda (cur, gradTotal): cur - gradTotal).repartition(N)
 
 def adaptV(joinedRDD, gamma, mu, N):
     """ Receives as input a joined RDD 
@@ -244,11 +244,11 @@ def adaptV(joinedRDD, gamma, mu, N):
 
         The return value  is an RDD with tuples of the form (j,vj). The returned rdd contains exactly N partitions.
     """
-    curGradByItem = joinedRDD.map(lambda (i, j, delta, ui, vj): (j, tuple(vj))).distinct().mapValues(lambda vj: np.array(vj)).repartition(N)
+    curRepByItem = joinedRDD.map(lambda (i, j, delta, ui, vj): (j, vj)).repartition(N)
     gradMSEByItem = joinedRDD.map(lambda (i, j, delta, ui, vj): (j, gradient_v(delta, ui, vj))).reduceByKey(add).repartition(N)
-    gradRegularizationByItem = curGradByItem.map(lambda (j, vj): (j, 2 * mu * vj)).repartition(N)
+    gradRegularizationByItem = curRepByItem.map(lambda (j, vj): (j, 2 * mu * vj)).repartition(N)
     gradTotalByItem = gradMSEByItem.join(gradRegularizationByItem).mapValues(lambda (gradMSE, gradReg): gamma * (gradMSE + gradReg)).repartition(N)
-    return curGradByItem.join(gradTotalByItem).mapValues(lambda (cur, grad): cur - grad).repartition(N)
+    return curRepByItem.join(gradTotalByItem).mapValues(lambda (cur, grad): cur - grad).repartition(N)
 
 if __name__ == "__main__":
 
