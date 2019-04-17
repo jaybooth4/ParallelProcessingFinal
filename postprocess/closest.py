@@ -3,7 +3,7 @@ import argparse
 import sys
 from scipy.spatial.distance import euclidean
 import numpy as np
-import glob, os    
+from util import readMultipartCSV
 
 BEERVECTORS = "../results/mf/u.csv/"
 BEERLOOKUP = "../data/beer/beerLookup.csv"
@@ -23,8 +23,7 @@ def parseArgs():
 
 def getBeerVectors(beerVectorFile):
     ''' Get beer vectors from output of training run '''
-    files = set(glob.glob(BEERVECTORS + "*")) - set(glob.glob(BEERVECTORS + "*.crc")) - set(glob.glob(BEERVECTORS + "_SUCCESS"))
-    beerVectors = pd.concat(map(lambda f: pd.read_csv(f, header=None), files))
+    beerVectors = readMultipartCSV(BEERVECTORS)
     # beerVectors = pd.read_csv(beerVectorFile)
     beerVectors['featureVector'] = beerVectors.iloc[:, 1:].values.tolist()
     beerVectors['beer_beerid'] = beerVectors.iloc[:, 0]
