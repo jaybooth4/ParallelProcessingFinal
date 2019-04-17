@@ -137,12 +137,12 @@ num_folds = 5
 reg = 1.0
 d = 10
 outputfile = 'output'
-iter_num = 40
-N = 32 * 4
+iter_num = 30
+N = 64
 folds = readFolds(data, num_folds, sc, sess)
 results = []
-for reg in range(1, 10):
-    for d in range(2, 20):
+for reg in [x / 50.0 for x in range(1, 20)]:
+    for d in range(20, 21):
         print('---------------------------------------')
         print('reg: {}, d: {}'.format(reg, d))
         args = get_args(data, num_folds, reg, d, outputfile, iter_num, N)
