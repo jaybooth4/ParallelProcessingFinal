@@ -9,29 +9,24 @@ from bokeh.palettes import all_palettes
 from bokeh.plotting import figure, show
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
+from matplotlib import pyplot
+from mpl_toolkits.mplot3d import Axes3D
 
 from util import readMultipartCSV, getBeerIdsByStyles
 
-OUTPUT = '../output/'
-BEERVECTORS = "../results/mf/u.csv/"
-BEERLOOKUP = "../data/beer/beerLookup.csv"
-
-# 14=APA,m 53=Euro Pale Lager
-STYLES = [14, 53]
-
 class MatrixGrapher:
-    
-    def __init__(self, graphType='beer'):
 
-        vectors = readMultipartCSV(BEERVECTORS)
-        idsForStyles, idToStyleMap = getBeerIdsByStyles(STYLES, BEERLOOKUP)
+    def __init__(self, beerVectorDir, beerLookup, outputDir, styles, graphType='beer'):
+        vectors = readMultipartCSV(beerVectorDir)
+        idsForStyles, idToStyleMap = getBeerIdsByStyles(styles, beerLookup)
         vectors = vectors.loc[vectors[0].isin(idsForStyles)]
+        self.outputDir = outputDir
         self.data = vectors.iloc[:, 1:].values.tolist()
-        self.ids = list(map(lambda elem: STYLES.index(idToStyleMap[elem]), vectors.iloc[:, 0]))
+        self.ids = list(map(lambda elem: styles.index(idToStyleMap[elem]), vectors.iloc[:, 0]))
         self.graphType = graphType
     
     def graphPCA(self):
-        output_file(OUTPUT + "pca" + ".html")
+        output_file(self.outputDir + "pca" + ".html")
         
         pca = PCA(n_components=2)
         df = pd.DataFrame(pca.fit_transform(self.data), columns=['PCA1', 'PCA2'])
@@ -55,9 +50,20 @@ class MatrixGrapher:
                     source=source
                    )
 
+        plot.legend.location = "top_left"
         layout = column(plot)
         show(layout)
 
+    def threeDPlot(self):
+        fig = pyplot.figure()
+        ax = Axes3D(fig)
+
+        pca = PCA(n_components=3)
+        df = pd.DataFrame(pca.fit_transform(self.data), columns=['PCA1', 'PCA2', 'PCA3'])
+        print df
+
+        ax.scatter(df['PCA1'], df['PCA2'], df['PCA3'])
+        pyplot.savefig(self.outputDir + self.graphType + '3dplot.png')
 
     # def graphLDA(self, name):
     #     output_file("results/kmeans-clustering-" + name + ".html")
@@ -89,7 +95,7 @@ class MatrixGrapher:
 
     def graphTSNE(self, perplexity=20):
         ''' Runs t-SNE on vector representations, then graphs groupings ''' 
-        output_file(OUTPUT + self.graphType + '-tsne.html')
+        output_file(self.outputDir + self.graphType + '-tsne.html')
         tsne = TSNE(perplexity=20)
         tsne_embedding = tsne.fit_transform(self.data)
         tsne_embedding = pd.DataFrame(tsne_embedding, columns=['x','y'])

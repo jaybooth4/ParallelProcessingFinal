@@ -5,9 +5,9 @@ from scipy.spatial.distance import euclidean
 import numpy as np
 from util import readMultipartCSV
 
-BEERVECTORS = "../results/mf/v.csv/"
-BEERLOOKUP = "../data/beer/beerLookup.csv"
-OUTPUT = "../output/"
+BEERVECTORS = "../results/als/v.csv/"
+BEERLOOKUP = "../data/beerProcessed/beerLookup.csv"
+OUTPUT = "../data/beerProcessed/"
 
 def parseArgs():
     ''' Parse input beer/style preferences '''
@@ -24,8 +24,6 @@ def parseArgs():
 def getBeerVectorData(beerVectorFile):
     ''' Get beer vectors from output of training run '''
     beerVectors = readMultipartCSV(BEERVECTORS)
-    print "beerVectors shape"
-    print beerVectors.shape
     beerVectors['featureVector'] = beerVectors.iloc[:, 1:].values.tolist()
     beerVectors['beer_beerid'] = beerVectors.iloc[:, 0]
     beerVectors = beerVectors[['beer_beerid', 'featureVector']].set_index('beer_beerid')
@@ -35,8 +33,6 @@ def getBeerVectorData(beerVectorFile):
 def getBeerData(lookupFile, vectorFile):
     ''' Get beer dataframe '''
     beerLookup = pd.read_csv(BEERLOOKUP).set_index('beer_beerid')
-    print "beerLookup shape"
-    print beerLookup.shape
     beerVectors = getBeerVectorData(vectorFile)
     beerData = beerLookup.join(beerVectors, how='inner')
     return beerData
@@ -92,7 +88,7 @@ def main():
     else:
         vector = getStyleVector(beerData, args.style)
     closestBeersToVector(beerData, vector)
-    closestBeersToVector(beerData, vector)
+    closestStylesToVector(beerData, vector)
 
 if __name__ == "__main__":
     main()

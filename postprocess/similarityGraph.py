@@ -7,18 +7,18 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from scipy import spatial
 
-INPUT = '../output/'
-OUTPUT = '../output/'
-
-def similarityGraph(typeName):
-    data = pd.read_csv(INPUT + typeName + 'Distances.csv')
+def similarityGraph(typeName, inputDir, outputDir):
+    data = pd.read_csv(inputDir + typeName + 'Distances.csv')
     if typeName == 'style':
         xData = data[['beer_style']].values.flatten()
+    elif typeName == 'beer':
+        xData = data[['beer_name']].values.flatten()
+    
     # Inverse of distance so that closer bars are higher
     yData = list(map(lambda dist: 1.0 / dist, data[['distance']].values.flatten()))
     data = [go.Bar(
-        x=xData,
-        y=yData
+        x=xData[:20],
+        y=yData[:20]
     )]
     layout = go.Layout(
         title=('Most Smiliar ' + typeName + '\'s'),
@@ -36,4 +36,4 @@ def similarityGraph(typeName):
         showlegend=False
     )
     fig = go.Figure(data=data, layout=layout)
-    offline.plot(fig, filename=OUTPUT + typeName + 'Similarity.html')
+    offline.plot(fig, filename=outputDir + typeName + 'Similarity.html')

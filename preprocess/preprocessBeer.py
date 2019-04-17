@@ -5,6 +5,7 @@ import numpy as np
 
 DATAFILE = "../data/raw/beer_reviews.csv"
 OUTDATADIR = "../data/beer/"
+BEERLOOKUPDIR = "../data/beerProcessed/"
 NUMFOLDS = 5
 
 def createBeerLookup(df, save=True):
@@ -15,7 +16,7 @@ def createBeerLookup(df, save=True):
     beerAvgRating= beerData.groupby('beer_beerid')[['beer_beerid', 'review_overall']].mean().set_index('beer_beerid')
     beerLookup = beerNames.join(beerAvgRating, how='inner')
     if save:
-        beerLookup.to_csv(OUTDATADIR + "beerLookup.csv")
+        beerLookup.to_csv(BEERLOOKUPDIR + "beerLookup.csv")
     return beerLookup
 
 def createCollaborativeDataset(df, save=True):
