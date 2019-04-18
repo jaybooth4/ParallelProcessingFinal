@@ -18,24 +18,27 @@ def similarityGraph(typeName, names, outputDir, data=None, inputDir=None):
     # Inverse of distance so that closer bars are higher
     yData = list(map(lambda dist: 1.0 / dist, data[['distance']].values.flatten()))
     data = [go.Bar(
-        x=xData[:20],
-        y=yData[:20]
+        x=xData[:15],
+        y=yData[:15]
     )]
     layout = go.Layout(
         title=('Most Smiliar ' + typeName + ' to ' + names),
+        autosize=False,
+        height=900,
+        width=1600,
         xaxis=dict(
-            title=typeName,
+            # title=typeName,
             # ticklen=5,
             # zeroline=False,
             # gridwidth=2
         ),
         yaxis=dict(
-            title='Similarity',
+            title='Similarity (Inverse distance)',
             # ticklen=5,
             # gridwidth=2,
         ),
         margin = dict(
-            b = 150
+            b = 200
         ),
         showlegend=False
     )
