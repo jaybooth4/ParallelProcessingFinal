@@ -61,7 +61,7 @@ def getStyleVector(beerData, styles):
     ''' Get vector representation for one or more styles '''
     styleVectors = beerData.groupby("beer_style_id")["featureVector"]\
             .apply(list).apply(lambda listOfVectors: np.mean(listOfVectors, axis=0))
-    namesVals = beerData.loc[beerData['beer_style_id'].isin(styles)][:, 'beer_style'].unique().values
+    namesVals = beerData.loc[beerData['beer_style_id'].isin(styles)].loc[:, 'beer_style'].unique()
     names = ', '.join(namesVals)
     return styleVectors.loc[styles].mean(), names
 

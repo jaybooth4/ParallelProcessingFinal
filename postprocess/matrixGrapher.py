@@ -35,7 +35,7 @@ class MatrixGrapher:
             data = dict(
                 PCA1 = df['PCA1'],
                 PCA2 = df['PCA2'],
-                colors = [all_palettes['Category20'][20][i % 20] for i in self.ids],
+                colors = [all_palettes['Category20'][20][i] for i in self.ids],
                 alpha = [0.9] * len(self.ids),
                 size = [7] * len(self.ids)
             )
@@ -50,53 +50,13 @@ class MatrixGrapher:
                     source=source
                    )
 
-        plot.legend.location = "top_left"
         layout = column(plot)
         show(layout)
-
-    def threeDPlot(self):
-        fig = pyplot.figure()
-        ax = Axes3D(fig)
-
-        pca = PCA(n_components=3)
-        df = pd.DataFrame(pca.fit_transform(self.data), columns=['PCA1', 'PCA2', 'PCA3'])
-        print df
-
-        ax.scatter(df['PCA1'], df['PCA2'], df['PCA3'])
-        pyplot.savefig(self.outputDir + self.graphType + '3dplot.png')
-
-    # def graphLDA(self, name):
-    #     output_file("results/kmeans-clustering-" + name + ".html")
-        
-    #     pca = PCA(n_components=2)
-    #     df = pd.DataFrame(pca.fit_transform(self.docs_rep), columns=['PCA1', 'PCA2'])
-
-    #     source = ColumnDataSource(
-    #         data = dict(
-    #             PCA1 = df['PCA1'],
-    #             PCA2 = df['PCA2'],
-    #             colors = [all_palettes['Category20'][20][i] for i in self.kmeans_labels],
-    #             alpha = [0.9] * self.num_docs,
-    #             size = [7] * self.num_docs
-    #         )
-    #     )
-
-    #     plot = figure(title="K-Means Clustering")
-    #     plot.circle('PCA1', 
-    #                 'PCA2', 
-    #                 fill_color='colors',
-    #                 alpha='alpha',
-    #                 size='size',
-    #                 source=source
-    #                )
-
-    #     layout = column(plot)
-    #     show(layout)
 
     def graphTSNE(self, perplexity=20):
         ''' Runs t-SNE on vector representations, then graphs groupings ''' 
         output_file(self.outputDir + self.graphType + '-tsne.html')
-        tsne = TSNE(perplexity=20)
+        tsne = TSNE(perplexity=perplexity)
         tsne_embedding = tsne.fit_transform(self.data)
         tsne_embedding = pd.DataFrame(tsne_embedding, columns=['x','y'])
         # tsne_embedding['hue'] = self.data.argmax(axis=1)
@@ -105,20 +65,13 @@ class MatrixGrapher:
             data=dict(
                 x = tsne_embedding.x,
                 y = tsne_embedding.y,
-                colors = [all_palettes['Category20'][20][i % 20] for i in self.ids],
+                colors = [all_palettes['Category20'][20][i] for i in self.ids],
                 alpha = [0.9] * tsne_embedding.shape[0],
                 size = [7] * tsne_embedding.shape[0]
             )
         )
 
-        hover = HoverTool(
-            tooltips = [
-                ("Document", "@doc_description")
-            ]
-        )
-
-        plot = figure(title="Graph of " + self.graphType + " embeddings",
-                        tools=[hover])
+        plot = figure(title="Graph of " + self.graphType + " embeddings")
         plot.circle('x', 'y', size='size', fill_color='colors', 
                         alpha='alpha', line_alpha=0, line_width=0.01, source=source, name="TSNE")
 
