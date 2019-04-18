@@ -18,7 +18,7 @@ import plotly.graph_objs as go
 
 from util import readMultipartCSV, getBeerIdsByStyles
 
-COLORS = ['rgb(204, 204, 204)', 'rgb(255, 255, 0)']
+COLORS = ['rgb(255, 75, 75)', 'rgb(75, 255, 75)', 'rgb(75, 75, 255)']
 
 class MatrixGrapher:
 
@@ -41,7 +41,7 @@ class MatrixGrapher:
             data = dict(
                 PCA1 = df['PCA1'],
                 PCA2 = df['PCA2'],
-                colors = [all_palettes['Category20'][20][i] for i in self.ids],
+                colors = [COLORS[i] for i in self.ids],#[all_palettes['Category20'][20][i] for i in self.ids],
                 alpha = [0.9] * len(self.ids),
                 size = [7] * len(self.ids)
             )
@@ -81,7 +81,7 @@ class MatrixGrapher:
             )
             traces.append(data)
         layout = go.Layout(
-            title=('Test'),
+            title=("PCA for " + self.graphType + " data"),
             autosize=False,
             height=900,
             width=1600,
@@ -117,7 +117,7 @@ class MatrixGrapher:
             data=dict(
                 x = tsne_embedding.x,
                 y = tsne_embedding.y,
-                colors = [all_palettes['Category20'][20][i] for i in self.ids],
+                colors = [COLORS[i] for i in self.ids],#[all_palettes['Category20'][20][i] for i in self.ids],
                 alpha = [0.9] * tsne_embedding.shape[0],
                 size = [7] * tsne_embedding.shape[0]
             )
