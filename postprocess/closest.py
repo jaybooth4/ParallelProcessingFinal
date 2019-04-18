@@ -9,18 +9,6 @@ BEERVECTORS = "../results/als/v.csv/"
 BEERLOOKUP = "../data/beerProcessed/beerLookup.csv"
 OUTPUT = "../data/beerProcessed/"
 
-def parseArgs():
-    ''' Parse input beer/style preferences '''
-    parser = argparse.ArgumentParser(
-        description='User beer preferences', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--beer', type=int, help="Preferred name of beer", nargs='*')
-    parser.add_argument('--style', type=int, help="Preferred style of beer", nargs='*')
-    args = parser.parse_args()
-    if args.beer == None and args.style == None:
-        print "Please enter one or more beers/styles"
-        sys.exit(1)
-    return args
-
 def getBeerVectorData(beerVectorFile):
     ''' Get beer vectors from output of training run '''
     beerVectors = readMultipartCSV(BEERVECTORS)
@@ -43,15 +31,18 @@ def closestBeersToVector(beerData, vector, save=True):
     beerDistances['distance'] = list(map(lambda beer: np.linalg.norm(beer - vector), beerDistances['featureVector']))
     beerDistances.drop(columns='featureVector', inplace=True)
     beerDistances = beerDistances.join(beerData, how='inner')[['beer_name', 'beer_style', 'distance']].sort_values(by=['distance'])
+    beerDistances = beerDistances[beerDistances['distance'] != 0]
     if save:
-        beerDistances.to_csv(OUTPUT + "beerDistances.csv")
+        beerDistances.to_csv(OUTPUT + "beersDistances.csv")
     return beerDistances
 
 def getBeerVector(beerData, beers):
     ''' Get vector representation for one or more beers '''
     # For some reason .values on the series is returning a list of list of lists
     specifiedBeers = [beerVector[0] for beerVector in beerData.loc[beers, ['featureVector']].values]
-    return np.mean(specifiedBeers, axis=0)
+    namesVals = beerData.loc[beers, 'beer_name'].values
+    names = ", ".join(namesVals)
+    return np.mean(specifiedBeers, axis=0), names
 
 def closestStylesToVector(beerData, vector, save=True):
     ''' Get closest styles to a given vector '''
@@ -61,15 +52,18 @@ def closestStylesToVector(beerData, vector, save=True):
     styleDistances = pd.DataFrame({'beer_style_id':styleDistances.index, 'distance':styleDistances.values}).set_index('beer_style_id')
     styleDistances = styleDistances.join(beerData[['beer_style_id', 'beer_style']].drop_duplicates().set_index("beer_style_id"), how='inner')
     styleDistances.sort_values(by=['distance'], inplace=True)
+    styleDistances = styleDistances[styleDistances['distance'] != 0]
     if save:
-        styleDistances.to_csv(OUTPUT + "styleDistances.csv")
+        styleDistances.to_csv(OUTPUT + "stylesDistances.csv")
     return styleDistances
 
 def getStyleVector(beerData, styles):
     ''' Get vector representation for one or more styles '''
     styleVectors = beerData.groupby("beer_style_id")["featureVector"]\
             .apply(list).apply(lambda listOfVectors: np.mean(listOfVectors, axis=0))
-    return styleVectors.loc[styles].mean()
+    namesVals = beerData.loc[beerData['beer_style_id'].isin(styles)][:, 'beer_style'].unique().values
+    names = ', '.join(namesVals)
+    return styleVectors.loc[styles].mean(), names
 
 def topBeers(beerData, styles, save=True):
     ''' Returns a sorted list of beers '''
@@ -79,16 +73,3 @@ def topBeers(beerData, styles, save=True):
     if save:
         topBeersByStyle.to_csv(OUTPUT + "topBeersByStyle.csv")
     return topBeersByStyle
-
-def main():
-    args = parseArgs()
-    beerData = getBeerData(BEERLOOKUP, BEERVECTORS)
-    if args.beer:
-        vector = getBeerVector(beerData, args.beer)
-    else:
-        vector = getStyleVector(beerData, args.style)
-    closestBeersToVector(beerData, vector)
-    closestStylesToVector(beerData, vector)
-
-if __name__ == "__main__":
-    main()
