@@ -5,13 +5,11 @@ from scipy.spatial.distance import euclidean
 import numpy as np
 from util import readMultipartCSV
 
-BEERVECTORS = "../results/als/v.csv/"
-BEERLOOKUP = "../data/beerProcessed/beerLookup.csv"
 OUTPUT = "../data/beerProcessed/"
 
 def getBeerVectorData(beerVectorFile):
     ''' Get beer vectors from output of training run '''
-    beerVectors = readMultipartCSV(BEERVECTORS)
+    beerVectors = readMultipartCSV(beerVectorFile)
     beerVectors['featureVector'] = beerVectors.iloc[:, 1:].values.tolist()
     beerVectors['beer_beerid'] = beerVectors.iloc[:, 0]
     beerVectors = beerVectors[['beer_beerid', 'featureVector']].set_index('beer_beerid')
@@ -20,7 +18,7 @@ def getBeerVectorData(beerVectorFile):
 
 def getBeerData(lookupFile, vectorFile):
     ''' Get beer dataframe '''
-    beerLookup = pd.read_csv(BEERLOOKUP).set_index('beer_beerid')
+    beerLookup = pd.read_csv(lookupFile).set_index('beer_beerid')
     beerVectors = getBeerVectorData(vectorFile)
     beerData = beerLookup.join(beerVectors, how='inner')
     return beerData

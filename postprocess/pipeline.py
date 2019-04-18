@@ -8,7 +8,7 @@ from matrixGrapher import MatrixGrapher
 OUTPUT = '../results/'
 BEERVECTORS = "../results/als/v2.csv/"
 BEERPROCESSEDDIR = "../data/beerProcessed/"
-BEERLOOKUP = BEERPROCESSEDDIR + 'beerLookup.csv'
+BEERLOOKUP = '../data/beer/beerLookup.csv'
 STYLES = [76, 12, 39]
 
 # 50 stout
