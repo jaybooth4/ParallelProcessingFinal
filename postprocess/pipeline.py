@@ -9,16 +9,8 @@ OUTPUT = '../results/'
 BEERVECTORS = "../results/als/v2.csv/"
 BEERPROCESSEDDIR = "../data/beerProcessed/"
 BEERLOOKUP = '../data/beer/beerLookup.csv'
-# STYLES = [76, 12, 13]
-# STYLES = [76, 12, 77]
-# STYLES = [76, 18, 77]
-STYLES = [24, 4, 13]
 
-# 50 stout
-# 14=APA,m 53=Euro Pale Lager, 76=light lager, 
-# 9=American double IPA, 18=AMerican stout
-# 13=Malt, 4=barleywine, 24=Beglian Pale ale
-# 12=American IPA, 103=Whitbier, 79=Milk sweet Stout
+STYLES = [24, 4, 13]
 
 def parseArgs():
     ''' Parse input beer/style preferences '''
@@ -40,12 +32,12 @@ def main():
         closestBeers = closestBeersToVector(beerData, vector)
         closestStyles = closestStylesToVector(beerData, vector)
 
-    # similarityGraph('Styles', names, OUTPUT, closestStyles)
-    # similarityGraph('Beers', names, OUTPUT, closestBeers)
+    similarityGraph('Styles', names, OUTPUT, closestStyles)
+    similarityGraph('Beers', names, OUTPUT, closestBeers)
     mg = MatrixGrapher(BEERVECTORS, BEERLOOKUP, OUTPUT, STYLES)
-    # mg.graphPCA()
+    mg.graphPCA()
     mg.graph3d()
-    # mg.graphTSNE(25)
+    mg.graphTSNE(25)
 
 if __name__ == "__main__":
     main()
