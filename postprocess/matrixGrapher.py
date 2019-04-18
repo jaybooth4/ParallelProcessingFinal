@@ -11,8 +11,14 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
+import plotly.plotly as py
+import plotly.offline as offline
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.graph_objs as go
 
 from util import readMultipartCSV, getBeerIdsByStyles
+
+COLORS = ['rgb(204, 204, 204)', 'rgb(255, 255, 0)']
 
 class MatrixGrapher:
 
@@ -52,6 +58,52 @@ class MatrixGrapher:
 
         layout = column(plot)
         show(layout)
+
+    def graph3d(self):
+        pca = PCA(n_components=3)
+        df = pd.DataFrame(pca.fit_transform(self.data), columns=['PCA1', 'PCA2', 'PCA3'])
+        df['id'] = self.ids
+        df.set_index('id', inplace=True)
+        groups = df.groupby('id')
+        traces = []
+        for group in groups:
+            data = go.Scatter3d(
+                x=group[1].PCA1,
+                y=group[1].PCA2,
+                z=group[1].PCA3,
+                mode='markers',
+                marker=dict(
+                    size=8,
+                    color=COLORS[group[0]],                # set color to an array/list of desired values
+                    colorscale='Viridis',   # choose a colorscale
+                    # opacity=0.8
+                )
+            )
+            traces.append(data)
+        layout = go.Layout(
+            title=('Test'),
+            autosize=False,
+            height=900,
+            width=1600,
+            xaxis=dict(
+                # title=typeName,
+                # ticklen=5,
+                # zeroline=False,
+                # gridwidth=2
+            ),
+            yaxis=dict(
+                title='Similarity (Inverse distance)',
+                # ticklen=5,
+                # gridwidth=2,
+            ),
+            margin = dict(
+                b = 200
+            ),
+            showlegend=False
+        )
+        fig = go.Figure(data=traces, layout=layout)
+        offline.plot(fig, filename=self.outputDir + self.graphType + '-pca3.html')
+
 
     def graphTSNE(self, perplexity=20):
         ''' Runs t-SNE on vector representations, then graphs groupings ''' 
