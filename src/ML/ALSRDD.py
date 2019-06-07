@@ -7,6 +7,8 @@ from pyspark import SparkContext
 from operator import add
 from pyspark.mllib.recommendation import ALS, Rating
 
+# ALS using RDD API
+
 def parseArgs():
     """ 
         Arg Parsing.

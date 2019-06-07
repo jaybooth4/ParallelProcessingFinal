@@ -1,6 +1,5 @@
 import argparse
 import sys
-
 from closest import getBeerData, getBeerVector, getStyleVector, closestBeersToVector, closestStylesToVector
 from similarityGraph import similarityGraph
 from matrixGrapher import MatrixGrapher
@@ -10,6 +9,7 @@ BEERVECTORS = "../results/als/v2.csv/"
 BEERPROCESSEDDIR = "../data/beerProcessed/"
 BEERLOOKUP = '../data/beer/beerLookup.csv'
 
+# Separated clusters for TSNE/PCA
 STYLES = [24, 4, 13]
 
 def parseArgs():
